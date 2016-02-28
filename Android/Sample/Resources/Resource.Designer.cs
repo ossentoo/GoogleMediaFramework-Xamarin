@@ -247,8 +247,8 @@ namespace GMFSample
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f09000a
-			public const int actions_container = 2131296266;
+			// aapt resource value: 0x7f090007
+			public const int actions_container = 2131296263;
 			
 			// aapt resource value: 0x7f090000
 			public const int adjust_height = 2131296256;
@@ -256,53 +256,50 @@ namespace GMFSample
 			// aapt resource value: 0x7f090001
 			public const int adjust_width = 2131296257;
 			
-			// aapt resource value: 0x7f09000c
-			public const int bottom_chrome = 2131296268;
+			// aapt resource value: 0x7f090009
+			public const int bottom_chrome = 2131296265;
 			
-			// aapt resource value: 0x7f090010
-			public const int fullscreen = 2131296272;
+			// aapt resource value: 0x7f09000d
+			public const int fullscreen = 2131296269;
 			
-			// aapt resource value: 0x7f090008
-			public const int logo_image = 2131296264;
+			// aapt resource value: 0x7f090005
+			public const int logo_image = 2131296261;
+			
+			// aapt resource value: 0x7f09000b
+			public const int mediacontroller_progress = 2131296267;
 			
 			// aapt resource value: 0x7f090003
-			public const int main_activity = 2131296259;
-			
-			// aapt resource value: 0x7f09000e
-			public const int mediacontroller_progress = 2131296270;
-			
-			// aapt resource value: 0x7f090006
-			public const int middle_section = 2131296262;
+			public const int middle_section = 2131296259;
 			
 			// aapt resource value: 0x7f090002
 			public const int none = 2131296258;
 			
-			// aapt resource value: 0x7f09000b
-			public const int pause = 2131296267;
+			// aapt resource value: 0x7f090008
+			public const int pause = 2131296264;
+			
+			// aapt resource value: 0x7f090010
+			public const int subtitles = 2131296272;
 			
 			// aapt resource value: 0x7f090011
-			public const int subtitles = 2131296273;
+			public const int surface_view = 2131296273;
 			
-			// aapt resource value: 0x7f090012
-			public const int surface_view = 2131296274;
+			// aapt resource value: 0x7f09000a
+			public const int time_current = 2131296266;
 			
-			// aapt resource value: 0x7f09000d
-			public const int time_current = 2131296269;
-			
-			// aapt resource value: 0x7f09000f
-			public const int time_duration = 2131296271;
-			
-			// aapt resource value: 0x7f090007
-			public const int top_chrome = 2131296263;
+			// aapt resource value: 0x7f09000c
+			public const int time_duration = 2131296268;
 			
 			// aapt resource value: 0x7f090004
-			public const int video_frame = 2131296260;
+			public const int top_chrome = 2131296260;
 			
-			// aapt resource value: 0x7f090005
-			public const int video_list_view = 2131296261;
+			// aapt resource value: 0x7f09000e
+			public const int video_frame = 2131296270;
 			
-			// aapt resource value: 0x7f090009
-			public const int video_title = 2131296265;
+			// aapt resource value: 0x7f09000f
+			public const int video_list_view = 2131296271;
+			
+			// aapt resource value: 0x7f090006
+			public const int video_title = 2131296262;
 			
 			static Id()
 			{
@@ -334,10 +331,10 @@ namespace GMFSample
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int Main = 2130903040;
+			public const int playback_control_layer = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int playback_control_layer = 2130903041;
+			public const int sample_activity = 2130903041;
 			
 			// aapt resource value: 0x7f030002
 			public const int subtitle_layer = 2130903042;

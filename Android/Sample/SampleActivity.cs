@@ -1,21 +1,28 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
 using Android.App;
 using Android.Content;
-using Android.Graphics;
+using Android.Content.PM;
 using Android.Graphics.Drawables;
+using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Android.OS;
 using Com.Google.Ads.Interactivemedia.V3.Api;
 using Com.Google.Android.Libraries.Mediaframework.Exoplayerextensions;
 using Com.Google.Android.Libraries.Mediaframework.Layeredvideo;
 using Com.Google.Android.Libraries.Mediaframework.Players;
 
 namespace GMFSample
-{ 
-    [Activity(Label = "GMFSample", MainLauncher = true, Icon = "@drawable/icon")]
-    public class MainActivity : Activity, PlaybackControlLayer.IFullscreenCallback
+{
+    [Activity(Label = "SampleActivity", MainLauncher = true, Icon = "@drawable/icon",
+        ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.KeyboardHidden
+)]
+
+public class SampleActivity : Activity, PlaybackControlLayer.IFullscreenCallback
     {
         private ImaPlayer imaPlayer;
         private FrameLayout videoPlayerContainer;
@@ -26,12 +33,12 @@ namespace GMFSample
         {
             base.OnCreate(savedInstanceState);
 
-            View view = LayoutInflater.Inflate(Resource.Layout.Main, null);
+            View view = LayoutInflater.Inflate(Resource.Layout.sample_activity, null);
 
             ActionBar?.Hide();
 
-            videoPlayerContainer = (FrameLayout) view.FindViewById(Resource.Id.video_frame);
-            videoListView = (ListView) view.FindViewById(Resource.Id.video_list_view);
+            videoPlayerContainer = (FrameLayout)view.FindViewById(Resource.Id.video_frame);
+            videoListView = (ListView)view.FindViewById(Resource.Id.video_list_view);
 
             videoListItems = GetVideoListItems();
             string[] videoTitles = new string[videoListItems.Length];
@@ -44,7 +51,7 @@ namespace GMFSample
             videoListView.Adapter = new ArrayAdapter(this, global::Android.Resource.Layout.SimpleListItem1, videoTitles);
 
             videoListView.ItemClick += VideoListView_ItemClick;
-            
+
             SetContentView(view);
 
         }
@@ -54,11 +61,18 @@ namespace GMFSample
             CreateImaPlayer(videoListItems[e.Position]);
         }
 
+        protected override void OnDestroy()
+        {
+            imaPlayer?.Release();
+            base.OnDestroy();
+        }
+
         public void CreateImaPlayer(VideoListItem video)
         {
             imaPlayer?.Release();
 
             videoPlayerContainer.RemoveAllViews();
+
             string adTagUrl = video.adUrl;
             string videoTitle = video.title;
 
@@ -66,6 +80,12 @@ namespace GMFSample
             settings.AutoPlayAdBreaks = true;
             imaPlayer = new ImaPlayer(this, videoPlayerContainer, video.video, videoTitle, adTagUrl);
             imaPlayer.SetFullscreenCallback(this);
+
+
+            Drawable logo = Resources.GetDrawable(Resource.Drawable.gmf_icon);
+
+            imaPlayer.SetLogoImage(logo);
+
             imaPlayer.Play();
         }
 
@@ -87,9 +107,9 @@ namespace GMFSample
                         "A28B21F921D0B245CDCF36F7EB54A2B5ABFC2&key=ik0",
                         Video.VideoType.Dash,
                         "bf5bb2419360daf1"),
-                    "http://pubads.g.doubleclick.net/gampad/ads?sz=400x300&iu=%2F6062%2Fgmf_demo&ciu_" +
-                    "szs&impl=s&gdfp_req=1&env=vp&output=xml_vast3&unviewed_position_start=1&url=[ref" +
-                    "errer_url]&correlator=[timestamp]&cust_params=gmf_format%3Dskip"),
+                    "http://pubads.g.doubleclick.net/gampad/ads?sz=640x360&iu=/6062/iab_vast_samples/skippable&"
+                    +"ciu_szs=300x250,728x90&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&"
+                        +"url=[referrer_url]&correlator=[timestamp]"),
                 new VideoListItem("Unskippable preroll (DASH)",
                     new Video("http://www.youtube.com/api/manifest/dash/id/bf5bb2419360daf1/source/youtub" +
                         "e?as=fmp4_audio_clear,fmp4_sd_hd_clear&sparams=ip,ipbits,expire,as&ip=0.0.0.0&ip" +
@@ -112,8 +132,8 @@ namespace GMFSample
                     "url=[referrer_url]&correlator=[timestamp]&ad_rule=1&cmsid=11924&vid=cWCkSYdF" +
                     "lU0&cust_params=gmf_format%3Dstd%2Cskip"),
                 new VideoListItem("No ads (mp4)",
-                    new Video("http://rmcdn.2mdn.net/MotifFiles/html/1248596/android_1330378998288.mp4",
-                        Video.VideoType.Dash),
+                    new Video("https://s0.2mdn.net/instream/videoplayer/media/android.mp4",
+                        Video.VideoType.Mp4),
                     null),
                 new VideoListItem("No ads - BBB (HLS)",
                     new Video("http://googleimadev-vh.akamaihd.net/i/big_buck_bunny/bbb-,480p,720p,1080p" +
@@ -153,7 +173,5 @@ namespace GMFSample
                 this.adUrl = adUrl;
             }
         }
-
     }
 }
-
