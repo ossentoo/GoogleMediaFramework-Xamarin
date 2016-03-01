@@ -1,4 +1,4 @@
-# GMFBinding license
+# GoogleMediaFramework-Xamarin
 The MIT License (MIT)
 
 Copyright (c) 2016 Steve Bilogan
