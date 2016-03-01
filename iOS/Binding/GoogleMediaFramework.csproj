@@ -35,7 +35,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <ObjcBindingNativeLibrary Include="libGoogleMediaFrameworkSDK.a" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GMFContentPlayhead.cs" />
@@ -55,10 +55,43 @@
     <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="libGoogleMediaFrameworkSDK.a" />
+    <ObjcBindingNativeLibrary Include="GoogleInteractiveMediaAds.a" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="GoogleInteractiveMediaAds.a" />
+    <BundleResource Include="Resources\player_control_close%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_maximize%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_minimize%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_pause%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_pause_large%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_play%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_play_large%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_replay%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_control_replay_large%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_controls_background%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_controls_title_bar_background%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\player_scrubber_thumb%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
 </Project>

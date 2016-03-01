@@ -22,9 +22,9 @@ namespace GoogleMediaFramework
         [Field("kGMFPlayerCurrentTotalTimeDidChangeNotification", "__Internal")]
         NSString kGMFPlayerCurrentTotalTimeDidChangeNotification { get; }
 
-        // extern NSString *const kGMFPlayerDidMinimizeNotification;
+     /*   // extern NSString *const kGMFPlayerDidMinimizeNotification;
 		[Field("kGMFPlayerDidMinimizeNotification", "__Internal")]
-		NSString kGMFPlayerDidMinimizeNotification { get; }
+		NSString kGMFPlayerDidMinimizeNotification { get; }*/
 
         // extern NSString *const kGMFPlayerPlaybackStateDidChangeNotification;
         [Field("kGMFPlayerPlaybackStateDidChangeNotification", "__Internal")]
@@ -70,7 +70,7 @@ namespace GoogleMediaFramework
 
         // @required -(void)didPressMinimize;
         [Abstract]
-        [Export("didPressMinimize:")]
+        [Export("didPressMinimize")]
         void DidPressMinimize();
 
 
@@ -580,10 +580,6 @@ namespace GoogleMediaFramework
         // @property (nonatomic, strong) UIImage * logoImage;
         [Export("logoImage", ArgumentSemantic.Strong)]
         UIImage LogoImage { get; set; }
-
-        // @property (nonatomic) BOOL isFullscreen;
-        [Export("isFullscreen")]
-        bool IsFullscreen { get; set; }
 
         // -(void)loadStreamWithURL:(NSURL *)URL;
         [Export("loadStreamWithURL:")]
@@ -1203,9 +1199,7 @@ namespace GoogleMediaFramework
     }
 
     // @interface IMAAdsManager : NSObject
-    [BaseType(typeof(NSObject),
-        Delegates = new string[] { "WeakDelegate" },
-        Events = new Type[] { typeof(IMAAdsManagerDelegate) })]
+    [BaseType(typeof(NSObject))]
     [DisableDefaultCtor]
     interface IMAAdsManager
     {

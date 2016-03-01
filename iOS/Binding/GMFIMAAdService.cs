@@ -8,7 +8,6 @@ namespace GoogleMediaFramework
 {
     public class GMFIMAAdService : GMFAdService, IGMFPlayerOverlayViewControllerDelegate
     {
-        private UIColor originalPlayPauseResetBackgroundColor;
         private GMFContentPlayhead contentPlayhead;
 
         private IMAAdsLoader adsLoader;
@@ -23,57 +22,19 @@ namespace GoogleMediaFramework
         {
             adsLoader = new IMAAdsLoader(CreateIMASettings());
             adsLoader.WeakDelegate = this;
-            //RegisterAdsLoaderEvents();
         }
 
         public void RequestAdsWithRequest(string request)
         {
-
             var view = new UIView(VideoPlayerController.View.Bounds);
             VideoPlayerController.SetAboveRenderingView(view);
             adDisplayContainer = new IMAAdDisplayContainer(view, null);
             contentPlayhead = new GMFContentPlayhead(VideoPlayerController);
 
-
-
-
             IMAAdsRequest adsRequest = new IMAAdsRequest(request, adDisplayContainer, contentPlayhead, null);
             adsLoader.RequestAdsWithRequest(adsRequest);
         }
-
-        /*	private void RegisterAdsLoaderEvents()
-			{
-				if (adsLoader != null)
-				{
-					UnregisterAdsLoaderEvents();
-					adsLoader.FailedWithErrorData += OnAdsLoaderFailedWithErrorData;
-					adsLoader.AdsLoadedWithData += OnAdsLoadedWithData;
-				}
-			}
-
-			private void UnregisterAdsLoaderEvents()
-			{
-				adsLoader.FailedWithErrorData -= OnAdsLoaderFailedWithErrorData;
-				adsLoader.AdsLoadedWithData -= OnAdsLoadedWithData;
-			}
-			*/
-
-        private void RegisterAdsManagerEvents()
-        {
-            if (adsManager != null)
-            {
-                UnregisterAdsManagerEvents();
-
-                _willEnterForegroundObserver = NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.WillEnterForegroundNotification, ResumeAdOnForeground);
-
-                adsManager.AdsManagerDidRequestContentPause += DidRequestContentPause;
-                adsManager.AdsManagerDidRequestContentResume += DidRequestContentResume;
-                adsManager.DidReceiveAdEvent += DidReceiveAdEvent;
-                adsManager.DidReceiveAdError += DidReceiveAdError;
-                adsManager.AdDidProgressToTime += AdDidProgressToTime;
-            }
-        }
-
+        
         private void ResumeAdOnForeground(NSNotification n)
         {
             if (_hasVideoPlayerControl)
@@ -82,23 +43,19 @@ namespace GoogleMediaFramework
             }
         }
 
-        private void UnregisterAdsManagerEvents()
+        private void DestroyAdsManager()
         {
             if (_willEnterForegroundObserver != null)
             {
                 NSNotificationCenter.DefaultCenter.RemoveObserver(_willEnterForegroundObserver);
             }
 
-            adsManager.AdsManagerDidRequestContentPause -= DidRequestContentPause;
-            adsManager.AdsManagerDidRequestContentResume -= DidRequestContentResume;
-            adsManager.DidReceiveAdEvent -= DidReceiveAdEvent;
-            adsManager.DidReceiveAdError -= DidReceiveAdError;
-            adsManager.AdDidProgressToTime -= AdDidProgressToTime;
-        }
+            if (adsManager != null)
+            {
+                adsManager.WeakDelegate = null;
+            }
 
-        private void DestroyAdsManager()
-        {
-            UnregisterAdsManagerEvents();
+            adsManager?.DiscardAdBreak();
             adsManager?.Destroy();
         }
 
@@ -108,7 +65,7 @@ namespace GoogleMediaFramework
             settings.Language = NSLocale.PreferredLanguages[0];
             settings.PlayerType = "google/gmf-ios";
             settings.PlayerVersion = "1.0.0";
-            settings.EnableDebugMode = true;
+           // settings.EnableDebugMode = true;
 
             return settings;
 
@@ -123,8 +80,9 @@ namespace GoogleMediaFramework
             // to the AdsManager.
 
             adsManager.InitializeWithAdsRenderingSettings(null);
+            adsManager.WeakDelegate = this;
 
-            RegisterAdsManagerEvents();
+            _willEnterForegroundObserver = NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.WillEnterForegroundNotification, ResumeAdOnForeground);
 
             adsManager.Start();
 
@@ -138,143 +96,6 @@ namespace GoogleMediaFramework
             VideoPlayerController?.Play();
         }
 
-        #region AdsLoaderDelegate
-        /*	private void OnAdsLoaderFailedWithErrorData(object sender, AdFailedEventArgs e)
-			{
-				System.Diagnostics.Debug.WriteLine($"Ad loading error {e.AdErrorData.AdError.Message}");
-
-				VideoPlayerController?.Play();
-			}
-
-			private void OnAdsLoadedWithData(object sender, AdLoadedEventArgs e)
-			{
-				// Get the ads manager from ads loaded data.
-				adsManager = e.AdsLoadedData.AdsManager;
-
-
-				// GMFContentPlayhead handles listening for time updates from the video player and passing those
-				// to the AdsManager.
-				contentPlayhead = new GMFContentPlayhead(VideoPlayerController);
-
-				adsManager = new IMAAdsManager(contentPlayhead, null);
-
-				RegisterAdsManagerEvents();
-
-				adsManager.Start();
-			}
-			*/
-        #endregion
-
-        /*	[Export("adsManager:didReceiveAdEvent:")]
-			void AdsManager(IMAAdsManager adsManager, IMAAdEvent adEvent)
-			{
-				VideoPlayerController.PlayerOverlayView.SetMediaTime(e.MediaTime);
-			}
-
-			[Export("adsManager:didReceiveAdError:")]
-			void AdsManager(IMAAdsManager adsManager, IMAAdError error)
-			{
-				RelinquishControlToVideoPlayer();
-				VideoPlayerController.Play();
-			}
-
-			[Export("adsManagerDidRequestContentPause:")]
-			void AdsManagerDidRequestContentPause(IMAAdsManager adsManager)
-			{
-
-			}
-
-			[Export("adsManagerDidRequestContentResume:")]
-			void AdsManagerDidRequestContentResume(IMAAdsManager adsManager)
-			{
-
-			}
-
-			[Export("adsManager:adDidProgressToTime:totalTime:"))]
-			void AdsManager(IMAAdsManager adsManager, double mediaTime, double totalTime)
-			{
-
-			}
-
-			[Export("adDidProgressToTime:totalTime:")]
-			void AdDidProgressToTime(double mediaTime, double totalTime)
-			{
-
-			}
-
-			[Export("adsManagerAdPlaybackReady:")]
-			void AdsManagerAdPlaybackReady(IMAAdsManager adsManager)
-			{
-
-			}
-
-			[Export("adsManagerAdDidStartBuffering:")]
-			void AdsManagerAdDidStartBuffering(IMAAdsManager adsManager)
-			{
-
-			}
-
-			[Export("adsManager:adDidBufferToMediaTime:mediaTime")]
-			void AdsManager(IMAAdsManager adsManager, double mediaTime)
-			{
-
-			}*/
-
-        private void AdDidProgressToTime(object sender, AdsManagerAdDidProgressToTimeEventArgs e)
-        {
-            VideoPlayerController.PlayerOverlayView.SetMediaTime(e.MediaTime);
-        }
-
-        private void DidReceiveAdError(object sender, AdsManagerErrorEventArgs e)
-        {
-            RelinquishControlToVideoPlayer();
-            VideoPlayerController.Play();
-        }
-
-        private void DidReceiveAdEvent(object sender, AdsManagerAdEventEventArgs e)
-        {
-            var eventType = e.AdEvent.Type;
-            System.Diagnostics.Debug.WriteLine($"** Ad Event **: {AdEventAsString(e.AdEvent.Type)}");
-
-            switch (eventType)
-            {
-                case IMAAdEventType.Loaded:
-                    VideoPlayerController.PlayerOverlayView.SetTotalTime(e.AdEvent.Ad.Duration);
-                    VideoPlayerController.PlayerOverlayView.SetSeekbarTrackColor(UIColor.Yellow);
-                    break;
-                case IMAAdEventType.Started:
-                case IMAAdEventType.Resume:
-                    VideoPlayerController.PlayerOverlayView.DisableSeekbarInteraction();
-                    VideoPlayerController.PlayerOverlayView.ShowPauseButton();
-                    ShowPlayerControls();
-                    break;
-                case IMAAdEventType.Pause:
-                    VideoPlayerController.PlayerOverlayView.ShowPlayButton();
-                    ShowPlayerControls();
-                    break;
-                case IMAAdEventType.AllAdsCompleted:
-                    RelinquishControlToVideoPlayer();
-                    DestroyAdsManager();
-                    //UnregisterAdsLoaderEvents();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void DidRequestContentResume(object sender, EventArgs e)
-        {
-            VideoPlayerController.SetControlsVisibility(visible: true, animated: true);
-            RelinquishControlToVideoPlayer();
-            VideoPlayerController.Play();
-        }
-
-        private void DidRequestContentPause(object sender, EventArgs e)
-        {
-            // IMA SDK wants control of the player, so pause and take over delegate from video controls.
-            TakeControlOfVideoPlayer();
-        }
-
         private void TakeControlOfVideoPlayer()
         {
             var playerViewController = VideoPlayerController;
@@ -286,11 +107,9 @@ namespace GoogleMediaFramework
             //TODO
             overlayViewController.IsAdDisplayed = true;
             overlayView.HideSpinner();
-
-            originalPlayPauseResetBackgroundColor = overlayView.PlayPauseResetButtonBackgroundColor;
+            
 
             overlayView.DisableTopBar();
-            overlayView.PlayPauseResetButtonBackgroundColor = new UIColor(0, 0, 0, 0.5f);
 
             _hasVideoPlayerControl = true;
             VideoPlayerController.Pause();
@@ -314,10 +133,8 @@ namespace GoogleMediaFramework
 
             overlayViewController.IsAdDisplayed = false;
             overlayView.EnableSeekbarInteraction();
-            overlayView.PlayPauseResetButtonBackgroundColor = UIColor.Black;
 
             VideoPlayerController.SetDefaultVideoPlayerOverlayDelegate();
-            overlayView.SetSeekbarTrackColorDefault();
 
             overlayView.EnableTopBar();
 
@@ -326,6 +143,67 @@ namespace GoogleMediaFramework
         }
         #region AdsManagerDelegate
 
+        [Export("adsManager:didReceiveAdEvent:")]
+        public void DidReceiveAdEvent(IMAAdsManager adsManager, IMAAdEvent adEvent)
+        {
+            var eventType = adEvent.Type;
+            System.Diagnostics.Debug.WriteLine($"** Ad Event **: {AdEventAsString(adEvent.Type)}");
+
+            switch (eventType)
+            {
+                case IMAAdEventType.Loaded:
+                    VideoPlayerController.PlayerOverlayView.SetTotalTime(adEvent.Ad.Duration);
+                    break;
+                case IMAAdEventType.Started:
+                case IMAAdEventType.Resume:
+                    VideoPlayerController.PlayerOverlayView.DisableSeekbarInteraction();
+                    VideoPlayerController.PlayerOverlayView.ShowPauseButton();
+                    ShowPlayerControls();
+                    break;
+                case IMAAdEventType.Pause:
+                    VideoPlayerController.PlayerOverlayView.ShowPlayButton();
+                    ShowPlayerControls();
+                    break;
+                case IMAAdEventType.AllAdsCompleted:
+                    RelinquishControlToVideoPlayer();
+                    DestroyAdsManager();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // @required -(void)adsManager:(IMAAdsManager *)adsManager didReceiveAdError:(IMAAdError *)error;
+        [Export("adsManager:didReceiveAdError:")]
+        public void DidReceiveAdError(IMAAdsManager adsManager, IMAAdError error)
+        {
+            RelinquishControlToVideoPlayer();
+            VideoPlayerController.Play();
+        }
+
+        // @required -(void)adsManagerDidRequestContentPause:(IMAAdsManager *)adsManager;
+        [Export("adsManagerDidRequestContentPause:")]
+        public void DidRequestContentPause(IMAAdsManager adsManager)
+        {
+            // IMA SDK wants control of the player, so pause and take over delegate from video controls.
+            TakeControlOfVideoPlayer();
+        }
+
+        // @required -(void)adsManagerDidRequestContentResume:(IMAAdsManager *)adsManager;
+        [Export("adsManagerDidRequestContentResume:")]
+        public void DidRequestContentResume(IMAAdsManager adsManager)
+        {
+            VideoPlayerController.SetControlsVisibility(visible: true, animated: true);
+            RelinquishControlToVideoPlayer();
+            VideoPlayerController.Play();
+        }
+
+        // @optional -(void)adsManager:(IMAAdsManager *)adsManager adDidProgressToTime:(NSTimeInterval)mediaTime totalTime:(NSTimeInterval)totalTime;
+        [Export("adsManager:adDidProgressToTime:totalTime:")]
+        public void AdDidProgressToTime(IMAAdsManager adsManager, double mediaTime, double totalTime)
+        {
+            VideoPlayerController.PlayerOverlayView.SetMediaTime(mediaTime);
+        }
         #endregion
 
         #region GMFAdService implementation
@@ -348,9 +226,9 @@ namespace GoogleMediaFramework
             // nothing to do
         }
 
-        public void DidPressFullscreen(bool isFullscreen)
+        public void DidPressMinimize()
         {
-            VideoPlayerController.DidPressFullscreen(isFullscreen);
+            VideoPlayerController.DidPressMinimize();
         }
 
         //Cannot seek with ads
@@ -372,22 +250,19 @@ namespace GoogleMediaFramework
 
         public void PlayerControlsWillShow()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void PlayerControlsDidShow()
         {
-            throw new NotImplementedException();
         }
 
         public void PlayerControlsWillHide()
         {
-            throw new NotImplementedException();
         }
 
         public void PlayerControlsDidHide()
-        {
-            throw new NotImplementedException();
+        { 
         }
 
         #region Debug Methods
@@ -457,10 +332,10 @@ namespace GoogleMediaFramework
                 _adService.DidSeekToTime(time);
             }
 
-            [Export("didPressFullscreen:")]
-            public override void DidPressFullscreen(bool isFullscreen)
+            [Export("didPressMinimize")]
+            public override void DidPressMinimize()
             {
-                _adService.DidPressFullscreen(isFullscreen);
+                _adService.DidPressMinimize();
             }
 
             [Export("didPressPause")]
