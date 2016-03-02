@@ -3,6 +3,8 @@ GoogleMediaFramework-Xamarin
 
 Xamarin Binding Library for GoogleMediaFramework (with IMA SDK integration).
 
+This is the source code for the [Google Media Framework Xamarin Component][XamComp]
+
 [Android GoogleMediaFramework][AndGMF]
 
 [iOS GoogleMediaFramework][iOSGMF]
@@ -25,4 +27,4 @@ License
 [AndGMF]: https://github.com/googleads/google-media-framework-android
 [iOSGMF]: https://github.com/googleads/google-media-framework-ios
 [IMASDK]:https://developers.google.com/interactive-media-ads/
-
+[XamComp]:https://components.xamarin.com/view/googlemediaframework
