@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component format="1" id="GoogleMediaFramework">
+  <name>Google Media Framework Binding</name>
+  <publisher>Steve Bilogan</publisher>
+  <publisher-url>http://www.github.com/kazo0</publisher-url>
+  <version>1.0</version>
+  <summary>Binding library for the Google Media Framework (with IMA SDK integration)</summary>
+  <packages>
+    <package id="Xamarin.GooglePlayServices.Ads" version="25.0.0.0" framework="android" />
+    <package id="Xamarin.GooglePlayServices.Analytics" version="25.0.0.0" framework="android" />
+  </packages>
+  <screenshots>
+    <img src="screenshots/ios.png" title="ios" />
+    <img src="screenshots/android.png" title="android" />
+  </screenshots>
+  <samples>
+    <sample id="iOSGMFSample">
+      <name>iOS Sample</name>
+      <summary>iOS Sample</summary>
+    </sample>
+    <sample id="AndroidGMFSample">
+      <name>Android Sample</name>
+      <summary>Android Sample</summary>
+    </sample>
+  </samples>
+</component>
