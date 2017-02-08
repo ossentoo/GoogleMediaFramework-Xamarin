@@ -28,3 +28,10 @@ License
 [iOSGMF]: https://github.com/googleads/google-media-framework-ios
 [IMASDK]:https://developers.google.com/interactive-media-ads/
 [XamComp]:https://components.xamarin.com/view/googlemediaframework
+
+Nuget Reinstall for Google Packages
+===================================
+
+When you first open the project, you may find that GMFSample references have a yellow triangle beside them.  To resolve this issue, issue the command below in the Visual Studio  Package Manager Console:
+
+update-package -reinstall xamarin.googleplayservices.ads -version 29.0.0.1
