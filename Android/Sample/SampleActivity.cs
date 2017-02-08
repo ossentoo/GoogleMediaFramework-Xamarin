@@ -76,8 +76,7 @@ public class SampleActivity : Activity, PlaybackControlLayer.IFullscreenCallback
             string adTagUrl = video.adUrl;
             string videoTitle = video.title;
 
-            var settings = new ImaSdkSettings();
-            settings.AutoPlayAdBreaks = true;
+            var settings = new ImaSdkSettings {AutoPlayAdBreaks = true};
             imaPlayer = new ImaPlayer(this, videoPlayerContainer, video.video, videoTitle, adTagUrl);
             imaPlayer.SetFullscreenCallback(this);
 
@@ -132,7 +131,7 @@ public class SampleActivity : Activity, PlaybackControlLayer.IFullscreenCallback
                     "url=[referrer_url]&correlator=[timestamp]&ad_rule=1&cmsid=11924&vid=cWCkSYdF" +
                     "lU0&cust_params=gmf_format%3Dstd%2Cskip"),
                 new VideoListItem("No ads (mp4)",
-                    new Video("https://s0.2mdn.net/instream/videoplayer/media/android.mp4",
+                    new Video("http://s0.2mdn.net/instream/videoplayer/media/android.mp4",
                         Video.VideoType.Mp4),
                     null),
                 new VideoListItem("No ads - BBB (HLS)",
@@ -162,9 +161,9 @@ public class SampleActivity : Activity, PlaybackControlLayer.IFullscreenCallback
 
         public class VideoListItem
         {
-            public string title;
-            public Video video;
-            public string adUrl;
+            public readonly string title;
+            public readonly Video video;
+            public readonly string adUrl;
 
             public VideoListItem(string title, Video video, string adUrl)
             {
